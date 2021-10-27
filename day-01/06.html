@@ -31,11 +31,11 @@
         ];
       }
 
-      var updateList = function(items) {
-        var listElement = document.querySelector('#task-list');
+      const updateList = (items) => {
+        let listElement = document.querySelector('#task-list');
         listElement.innerHTML = '';
 
-        items.forEach(function(item) {
+        items.forEach((item) => {
           listElement.innerHTML += renderItem(item);
         });
 
