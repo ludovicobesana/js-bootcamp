@@ -21,11 +21,15 @@
       <ul id="task-list" class="list-group"></ul>
     </div>
     <script>
-      let listItems = [
-        { text: 'Buy coffee',  completed: true  },
-        { text: 'Buy milk',    completed: false },
-        { text: 'Disco dance', completed: false }
-      ];
+      const loadList = () => {
+        if (localStorage.listItems) return JSON.parse(localStorage.listItems);
+
+        return [
+          { text: 'Buy coffee',  completed: true  },
+          { text: 'Buy milk',    completed: false },
+          { text: 'Disco dance', completed: false }
+        ];
+      }
 
       const updateList = (items) => {
         let listElement = document.querySelector("#task-list");
@@ -34,9 +38,11 @@
         items.forEach((item) => {
           listElement.appendChild(renderItem(item));
         });
+
+        localStorage.listItems = JSON.stringify(items);
       }
 
-      const renderItem = (item) => {
+      const renderItem = item => {
         const template = document.getElementById("item-template");
         let instance = document.importNode(template.content, true);
         instance.querySelector("span").innerText = item.text;
@@ -46,7 +52,7 @@
         return instance;
       }
 
-      const createNew = (event) => {
+      const createNew = function(event) {
         event.preventDefault();
 
         const newItemElement = document.querySelector('#new-item');
@@ -77,6 +83,8 @@
 
         updateList(listItems);
       }
+
+      let listItems = loadList();
 
       updateList(listItems);
     </script>

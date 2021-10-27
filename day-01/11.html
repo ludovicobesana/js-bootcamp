@@ -7,7 +7,7 @@
   </head>
   <body>
     <template id="item-template">
-      <li data-completed="" class="list-group-item">
+      <li data-completed=false class="list-group-item">
         <span onclick="toggleStatus(event)"></span>
         <button onclick="removeItem(event)" class="close">×</button>
       </li>
@@ -48,12 +48,14 @@
         });
 
         if (save) localStorage.listItems = JSON.stringify(items);
+
+        updateCounters();
       }
 
       const renderItem = (item) => {
         const template = document.getElementById("item-template");
         let instance = document.importNode(template.content, true);
-        instance.querySelector(".list-group-item > span").innerText = item.text;
+        instance.querySelector("span").innerText = item.text;
         instance
           .querySelector(".list-group-item")
           .setAttribute("data-completed", item.completed);
@@ -106,11 +108,22 @@
         updateList(itemsToShow);
       }
 
-      const clearCompleted = function() {
+      const clearCompleted = () => {
         listItems = listItems.filter((item) => !item.completed);
 
         updateList(listItems, true);
       }
+
+      const updateCounters = () => {
+        let completedCount = 0;
+        listItems.forEach((item) => {
+          if (item.completed) completedCount++;
+        });
+        document.querySelector(".filter-all").dataset.count = listItems.length;
+        document.querySelector(".filter-active").dataset.count =
+          listItems.length - completedCount;
+        document.querySelector(".filter-completed").dataset.count = completedCount;
+      };
 
       let listItems = loadList();
 

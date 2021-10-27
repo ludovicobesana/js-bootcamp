@@ -7,8 +7,8 @@
   </head>
   <body>
     <template id="item-template">
-      <li data-completed="" class="list-group-item">
-        <span onclick="toggleStatus(event)"></span>
+      <li class="list-group-item">
+        <span></span>
         <button onclick="removeItem(event)" class="close">×</button>
       </li>
     </template>
@@ -21,15 +21,7 @@
       <ul id="task-list" class="list-group"></ul>
     </div>
     <script>
-      var loadList = function() {
-        if (localStorage.listItems) return JSON.parse(localStorage.listItems);
-
-        return [
-          { text: 'Buy coffee',  completed: true  },
-          { text: 'Buy milk',    completed: false },
-          { text: 'Disco dance', completed: false }
-        ];
-      }
+      let listItems = ['Buy coffee', 'Buy milk', 'Disco dance'];
 
       const updateList = (items) => {
         let listElement = document.querySelector("#task-list");
@@ -38,29 +30,24 @@
         items.forEach((item) => {
           listElement.appendChild(renderItem(item));
         });
-
-        localStorage.listItems = JSON.stringify(items);
       }
 
-      const renderItem = item => {
+      const renderItem = (item) => {
         const template = document.getElementById("item-template");
         let instance = document.importNode(template.content, true);
-        instance.querySelector(".list-group-item > span").innerText = item.text;
-        instance
-          .querySelector(".list-group-item")
-          .setAttribute("data-completed", item.completed);
+        instance.querySelector("span").innerText = item;
         return instance;
       }
 
-      const createNew = function(event) {
+      const createNew = (event) => {
         event.preventDefault();
 
-        const newItemElement = document.querySelector('#new-item');
+        const newItemElement = document.querySelector("#new-item");
         let newItemValue = newItemElement.value.trim();
 
         if (!newItemValue) return;
 
-        listItems.push({ text: newItemValue, completed: false });
+        listItems.push(newItemValue);
         newItemElement.value = "";
 
         updateList(listItems);
@@ -68,23 +55,9 @@
 
       const removeItem = (event) => {
         const clickedItemText = event.target.previousElementSibling.innerHTML;
-        listItems = listItems.filter((item) => clickedItemText != item.text);
+        listItems = listItems.filter((item) => clickedItemText != item);
         updateList(listItems, true);
-      }
-
-      const toggleStatus = (event) => {
-        const clickedItemText = event.target.innerHTML;
-
-        listItems.forEach((item) => {
-          if (clickedItemText == item.text) {
-            item.completed = !item.completed;
-          }
-        });
-
-        updateList(listItems);
-      }
-
-      let listItems = loadList();
+      };
 
       updateList(listItems);
     </script>

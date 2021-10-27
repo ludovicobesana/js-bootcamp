@@ -16,10 +16,12 @@
 
       const updateList = (items) => {
         let listElement = document.querySelector('#task-list');
-        listElement.innerHTML = '';
+        while (listElement.firstChild) listElement.removeChild(listElement.firstChild);
 
         items.forEach((item) => {
-          listElement.innerHTML += '<li>' + item + '</li>';
+          let element = document.createElement('li');
+          element.innerHTML = item;
+          listElement.appendChild(element);
         });
       }
 
